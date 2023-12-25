@@ -1,1 +1,1 @@
-TEAMS = ["Team Peter", "Team 2", "Team 3", "Team 4"]
+TEAMS = ["Team Peter/Helle", "Team Agnete", "Team Kim", "Team Henrik"]
