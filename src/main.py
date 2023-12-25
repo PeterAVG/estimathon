@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 from teams import TEAMS
 
 # change CHANNEL_ID to the channel you want to read
-CHANNEL_ID = "C06B9UPCZ2A"  # nytår2023test
+CHANNEL_ID = "C06B3US0JH5"  # nytår2023test
 # number of questions in Estimation Game
 NUM_QUESTIONS = len(QUESTIONS)
 # NUMBER OF TEAMS
