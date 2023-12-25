@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "estimathon"
+version = "0.1.0"
+description = ""
+authors = ["Peter Gade <petervistar@hotmail.com>"]
+maintainers = [
+    "Peter Gade <petervistar@hotmail.com>"
+]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/PeterAVG/estimathon"
+packages = [
+  { include = "src"},
+]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pandas = "^1.5.2"
+numpy = "^1.23.5"
+slack-sdk = "^3.21.0"
+python-dotenv = "^1.0.0"
+streamlit = "1.27.2"
+matplotlib = "^3.8.2"
+
+[build-system]
+requires = ["poetry-core>=1.4.0"]
+build-backend = "poetry.core.masonry.api"
