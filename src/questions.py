@@ -1,12 +1,12 @@
 Q1 = "Hvor mange mio. mennesker ser Alene Hjemme den 24. december i Polen?"
 Q2 = "Hvor meget er Novo Nordisk værd i mia kroner?"
-Q3 = "Meter i Sekundet solgte flest billetter i Danmark i 2023. Hvor mange?"
-Q4 = "Hvor er Danmarks samlede statsbudget (2021) i hele mia. kroner?"
+Q3 = "Filmen 'Meter i Sekundet' solgte flest billetter i Danmark i 2023. Hvor mange?"
+Q4 = "Hvad er Danmarks samlede statsbudget (2021) i hele mia. kroner?"
 Q5 = "Hvor mange kirker er der i Danmark?"
 Q6 = "Hvor mange grise er der i Danmark i mio.?"
 Q7 = "For det samlede antal kørte kilometer I Danmark, hvor mange procent er tilbagelagt på cykel?"
-Q8 = "Tesla Model Y blev den mest solgte bil nogensinde i Danmark i 2023. Hvor var den hidtige rekord holdt af Opel Kadett fra 1986?"
-Q9 = "For det samlede antal kørte kilometer I Danmark, hvor mange procent er tilbagelagt på cykel?"
+Q8 = "Tesla Model Y blev den mest solgte bil nogensinde i Danmark i 2023. Hvad var den hidtige rekord holdt af Opel Kadett fra 1986?"
+Q9 = "Hvor mange sejrer har verdens bedste badmintonspiller Viktor Axelsen haft i sin professionelle karriere?"
 Q10 = "Hvor mange af skatteydernes penge brugte daværende departamentchef Barbara Bertelsen på kaffe og croissanter i 2017 til møder?"
 Q11 = "Hvor lang er Danmarks kystlinje?"
 Q12 = "Hvor mange øer hører til Danmark? (uden Grønland og Færøerne)"
@@ -54,8 +54,8 @@ QUESTIONS = {
     },
     "Q9": {
         "Spørgsmål": Q9,
-        "svar": 200,  # needs to be number
-        "kilde": "https://www.vejdirektoratet.dk/tema/cykler-paa-vejene",
+        "svar": 524,  # needs to be number
+        "kilde": "https://en.wikipedia.org/wiki/Viktor_Axelsen",
     },
     "Q10": {
         "Spørgsmål": Q10,

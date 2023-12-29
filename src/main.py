@@ -9,6 +9,7 @@ import streamlit as st
 from dataclasses import dataclass, field
 import pandas as pd
 from questions import QUESTIONS
+from streamlit_autorefresh import st_autorefresh
 
 # read SLACK_TOKEN from .env file
 from dotenv import load_dotenv
@@ -16,7 +17,7 @@ from dotenv import load_dotenv
 from teams import TEAMS
 
 # change CHANNEL_ID to the channel you want to read
-CHANNEL_ID = "C06B3US0JH5"  # nytår2023test
+CHANNEL_ID = "C06BR2778AJ"  # nytår2023
 # number of questions in Estimation Game
 NUM_QUESTIONS = len(QUESTIONS)
 # NUMBER OF TEAMS
@@ -203,6 +204,10 @@ def get_res() -> Dict[str, Team]:
             res[team_name].answers[question_number] = answer
             res[team_name].count += 1
 
+    for team_name in TEAMS:
+        if team_name not in res:
+            res[team_name] = Team(team_name)
+
     return res
 
 
@@ -228,31 +233,31 @@ def input_page():
     answer_interval1 = st.number_input("Answer Interval 1", min_value=1, step=1)
     answer_interval2 = st.number_input("Answer Interval 2", min_value=1, step=1)
 
-    if _count >= NUM_ANSWERS:
-        st.error(
-            f"{team_name} have alread answered {NUM_ANSWERS} times... No more answers allowed"
-        )
-        return
-
-    if question_number > NUM_QUESTIONS:
-        st.error(f"Invalid question number: {question_number} for input")
-        return
-
-    if answer_interval1 > answer_interval2:
-        st.error(
-            f"Invalid answer interval: {answer_interval1} > {answer_interval2} for input"
-        )
-        return
-
-    if answer_interval1 <= 0:
-        st.error(f"Invalid answer interval: {answer_interval1} <= 0 for input")
-        return
-
-    if answer_interval2 <= 0:
-        st.error(f"Invalid answer interval: {answer_interval2} <= 0 for input")
-        return
-
     if st.button("Submit"):
+        if _count >= NUM_ANSWERS:
+            st.error(
+                f"{team_name} have alread answered {NUM_ANSWERS} times... No more answers allowed"
+            )
+            return
+
+        if question_number > NUM_QUESTIONS:
+            st.error(f"Invalid question number: {question_number} for input")
+            return
+
+        if answer_interval1 > answer_interval2:
+            st.error(
+                f"Invalid answer interval: {answer_interval1} > {answer_interval2} for input"
+            )
+            return
+
+        if answer_interval1 <= 0:
+            st.error(f"Invalid answer interval: {answer_interval1} <= 0 for input")
+            return
+
+        if answer_interval2 <= 0:
+            st.error(f"Invalid answer interval: {answer_interval2} <= 0 for input")
+            return
+
         # send message to slack channel
         message = (
             f"{team_name}\n{question_number}\n{answer_interval1}\n{answer_interval2}"
@@ -281,10 +286,21 @@ def results_page():
         entries.extend(team.as_list_of_dicts())
 
     df = pd.DataFrame(entries)
-    # shape dataframe such that column "Team name" is columns, "Question" is index, "Score" is values
-    df = df.pivot(index="Question", columns="Team name", values="Score")
-    for team_name in df.columns:
-        df.loc["Score", team_name] = res[team_name].score()
+    if not df.empty:
+        # shape dataframe such that column "Team name" is columns, "Question" is index, "Score" is values
+        df = df.pivot(index="Question", columns="Team name", values="Score")
+        for team_name in df.columns:
+            assert team_name in TEAMS
+            df.loc["Score", team_name] = res[team_name].score()
+        for team in TEAMS:
+            if team not in df.columns:
+                df[team] = np.infty
+                df.loc["Score", team] = res[team].score()
+    else:
+        df = pd.DataFrame(index=[f"Q{i}" for i in range(1, NUM_QUESTIONS + 1)])
+        for team in TEAMS:
+            df[team] = np.infty
+            df.loc["Score", team] = res[team].score()
 
     # Add question index if it is missing
     for i in range(1, NUM_QUESTIONS + 1):
@@ -302,10 +318,13 @@ def results_page():
     # cells: score per team per question
     # df = df.replace(np.nan, np.infty).applymap(lambda x: np.infty if x == np.infty else int(x))
     df = df.replace(np.infty, np.nan)
-    # df = df.applymap(lambda x: "" if pd.isna(x) else int(x))
-    styled_df = df.style.background_gradient(cmap="RdYlGn_r", axis=None).format(
-        "{:.0f}"
-    )
+    if entries:
+        styled_df = df.style.background_gradient(cmap="RdYlGn_r", axis=None).format(
+            "{:.0f}"
+        )
+    else:
+        styled_df = df.style.format("{:.0f}")
+
     st.table(styled_df)
 
 
@@ -323,6 +342,9 @@ def main() -> None:
     if page == "Input Page":
         input_page()
     elif page == "Results Page":
+        # Run the autorefresh about every 2000 milliseconds (2 seconds) and stop
+        # after it's been refreshed 100 times.
+        _ = st_autorefresh(interval=2000, limit=10000, key="fizzbuzzcounter")
         results_page()
     elif page == "Questions":
         st.title("Questions")
