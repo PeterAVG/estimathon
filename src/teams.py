@@ -1,1 +1,1 @@
-TEAMS = ["Team Mike/Asger", "Team Girls", "Team Mikkel/Simon"]
+TEAMS = ["Team Lis/Flemming", "Team Stine/Rasmus"]
